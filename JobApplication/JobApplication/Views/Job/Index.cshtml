@@ -1,0 +1,110 @@
+﻿@using JobApplication.Models
+@model JobViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>JobDetails</title>   
+       <script src="~/Scripts/jquery-1.10.2.js"></script>
+       <script src="~/Scripts/bootstrap.js"></script>
+       <link href="~/Content/bootstrap.css" rel="stylesheet" />
+       <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+<body>
+   
+    <div class="container">
+
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>JobID</th>
+                        <th>Name</th>
+                        <th>Floor</th>
+                        <th>JobStatus</th>
+                        <th>RoomType</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.JobList)
+                    {
+                        <tr>
+                            <td>@item.JobId</td>
+                            <td>@item.Name</td>
+                            <td>@item.Floor</td>
+                            <td>@item.JobStatus</td>
+                            <td>@item.RoomTypeDescription</td>
+                            <td>
+                                @if (item.JobStatus == "In Progress" || item.JobStatus == "Delayed")
+                                {
+                                    <button value="@item.JobId" id="applyaction" class="btn btn-default" type="submit">Complete</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    @*TO-DO The below script has to move to external js file*@
+    <script>
+        $(document).ready(function () {
+            GridStyleOnStatus();
+
+            //ajax for update
+            $(document).on('click', '#applyaction', function (e) {               
+                var jobid = $(this).val();                                 
+                var data = { JobId: parseInt(jobid) }
+              
+                $.ajax({
+                    type:"POST",
+                    data:JSON.stringify(data),
+                    url: '/Job/Index',
+                    contentType: "application/json;" ,
+                    success: function (result) {
+                        $('#applyaction').attr('disabled', 'disabled');
+                    },
+
+                    error: function () {
+                        console.log("eror");
+                    }
+                    
+                });
+            });        
+
+     
+        });
+
+        function GridStyleOnStatus()
+        {
+            $("tbody tr").each(function () {
+                var status = $(this).find("td:eq(3)").text();
+                switch (status) {
+                    case "Delayed":
+                        $(this).addClass('Delayed');
+                        break;
+                    case "Not Started":
+                        $(this).addClass('NotStarted');
+                        break;
+                    case "In Progress":
+                        $(this).addClass('InProgress');
+                        break;
+                    case "Complete":
+                        $(this).addClass('Complete');
+                        break;
+                }
+            });
+        }
+  
+    </script>
+</body>
+</html>
