@@ -1,7 +1,10 @@
 # Willow
 Willow Coding Challenge
 Q1 - Solved -available under Q1.Closure folder.
+
 Q2 - Solved - available under Q2.SqlQuery folder.
+Rename Closures.js to Closures.html. 
+Open in chrome and displays 3 anchor tags and on click of each anchor alerts index number.
 
 Q3-WebApplication
 Open folder : JobApplication
